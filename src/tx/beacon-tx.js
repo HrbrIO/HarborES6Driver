@@ -11,6 +11,7 @@ module.exports = class BeaconTX {
      *
      * @param {Object} options - Options for the transmitter
      * @param {Boolean} options.useLocalServer - Transmit to a local mockup server
+     * @param {String} options.apiKey - API key for this client. If not specified, the test API key is used
      */
     constructor( options ) {
         this.beaconPostUrl = options && options.useLocalServer ? LOCAL_HARBOR_SERVICES_URL : CLOUD_HARBOR_SERVICES_URL;
@@ -18,20 +19,31 @@ module.exports = class BeaconTX {
         this.apiKey = (options && options.apiKey) || MAGIC_API_KEY;
     }
 
+    /**
+     *
+     * @param { Object } message - object to post to Harbor Services
+     * @returns { Promise }
+     */
     post( message ) {
-
         return request
             .post( this.beaconPostUrl )
             .send( message )
             .set( 'apikey', this.apiKey )
             .set( 'Accept', 'application/json' );
-
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     static get localHarborServicesUrl() {
         return LOCAL_HARBOR_SERVICES_URL;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     static get cloudHarborServicesUrl() {
         return CLOUD_HARBOR_SERVICES_URL;
     }

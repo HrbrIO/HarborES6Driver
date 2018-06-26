@@ -57,4 +57,14 @@ describe( 'Beacon-TX Unit Tests', function () {
 
     } );
 
+    describe( 'Static debug methods/getters/etc.', function () {
+
+        it( 'should return the local Harbor services URL', function ( done ) {
+            expect( BeaconTx.localHarborServicesUrl ).to.equal( 'http://localhost:1337/v2/beacon' );
+            expect( BeaconTx.cloudHarborServicesUrl ).to.equal( 'http://cloud.hrbr.io/v2/beacon' );
+            done();
+        } );
+
+    } );
+
 } );
