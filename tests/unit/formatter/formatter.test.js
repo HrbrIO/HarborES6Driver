@@ -93,6 +93,19 @@ describe( 'Formatter Unit Tests', function () {
             done();
         } );
 
+        it( 'One shot format bypass: formatter should return object WITHOUT BP & CF  attached', function ( done ) {
+            const fmtr = new Formatter( { commonFields: COMMON_FIELDS } );
+            const beaconMsg = { cpu: 0.98, weather: 'stormy' };
+            const formatted = fmtr.format( beaconMsg, true ); // bypass formatter
+            expect( formatted ).to.be.an( 'object' );
+            expect( formatted.cpu ).to.equal( beaconMsg.cpu );
+            expect( formatted.weather ).to.equal( beaconMsg.weather );
+            expect( formatted ).to.not.have.property( 'recordedAt' );
+            expect( formatted ).to.not.have.property( 'beer' );
+            expect( formatted ).to.not.have.property( 'wine' );
+            done();
+        } );
+
         it( 'formatter should throw error with non-object CF field', function ( done ) {
             // This is a little trick to catch errors in constructors
             const func = function () { new Formatter( { commonFields: 'this should crash' } ) };
