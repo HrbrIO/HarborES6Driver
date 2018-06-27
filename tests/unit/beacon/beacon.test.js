@@ -15,7 +15,6 @@ const Beacon = require( '../../../src/beacon/beacon' );
 const _ = require('lodash');
 
 
-
 describe( 'Beacon Unit Tests', function () {
 
     describe( 'Initialize state checks', function () {
@@ -33,7 +32,7 @@ describe( 'Beacon Unit Tests', function () {
         } );
 
         it( 'Init of Beacon should change isInitialized.', function ( done ) {
-            Beacon.initialize({ txOptions: { useLocalServer: true, xxxapiKey: 'invalid' } });
+            Beacon.initialize({ txOptions: { useLocalServer: true, apiKey: 'ABCD321099' } });
             expect( Beacon.isInitialized ).to.equal( true );
             done();
         } );
@@ -53,11 +52,9 @@ describe( 'Beacon Unit Tests', function () {
             _.times(10, value => {
                 Beacon.transmit({ message: value });
             });
-
-
+            // TODO: Right now, pass/fail for this visual inspection of the Sails DB. Not great.
             done();
         });
-
 
 
     });

@@ -37,15 +37,16 @@ let formatter;
 let tx;
 let txLoopRunning = false;
 let isBeaconInitialized = false;
-let interMessageDelayMs = 5;
+let interMessageDelayMs;
 let maxRetries = 3;
 let currentRetryCount;
 let isRetry = false;
 let verbose = true;
 let txOn = true; // disables transmit, used mostly for testing
+let drainedCallback;
 
 function log(msg) {
-    if (verbose) console.log(msg);
+    if (verbose) console.log( new Date() + ':' + msg);
 }
 
 function postNextToHarbor() {
@@ -65,6 +66,7 @@ function postNextToHarbor() {
                 setTimeout(postNextToHarbor, interMessageDelayMs);
             } else {
                 txLoopRunning = false; // end the loop, nothing to do
+                if (drainedCallback) drainedCallback(); // call the drained callback, if one.
             }
         })
         .catch(err => {
@@ -120,7 +122,8 @@ const self = module.exports = {
         buffer = new Buffer(options && options.bufferOptions);
         formatter = new Formatter(options && options.formatterOptions);
         tx = new Tx(options && options.txOptions);
-
+        interMessageDelayMs = ( options && options.txOptions && options.txOptions.interMessageDelayMs ) || 5;
+        drainedCallback = options && options.drainedCb;
         isBeaconInitialized = true;
 
 
