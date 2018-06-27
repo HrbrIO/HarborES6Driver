@@ -23,7 +23,7 @@ function drained() {
 Beacon.initialize({
     txOptions: {
         useLocalServer: true,
-        apiKey: 'ABCD321099',
+        apiKey: 'ABCD4949',
         interMessageDelayMs: 1
     },
     bufferOptions: {
