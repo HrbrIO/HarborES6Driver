@@ -37,7 +37,10 @@ let formatter;
 let tx;
 let txLoopRunning = false;
 let isBeaconInitialized = false;
-let interMessageDelayMs = 500;
+let interMessageDelayMs = 5;
+let maxRetries = 3;
+let currentRetryCount;
+let isRetry = false;
 let verbose = true;
 let txOn = true; // disables transmit, used mostly for testing
 
@@ -55,6 +58,9 @@ function postNextToHarbor() {
         .then(resp => {
             log('Beacon message sent successfully');
             buffer.pull();
+            // reset the retries
+            isRetry = false;
+            currentRetryCount = maxRetries;
             if (buffer.entries) {
                 setTimeout(postNextToHarbor, interMessageDelayMs);
             } else {
@@ -62,9 +68,30 @@ function postNextToHarbor() {
             }
         })
         .catch(err => {
-            log('Beacon message failed...retrying');
-            // TODO: retry counting
-            setTimeout(postNextToHarbor, interMessageDelayMs);
+            log('Beacon message failed...Status: ' + err.status);
+
+            if (!err.status && err.code ==='ECONNREFUSED') err.status = 999; // flag for server down
+
+            switch (err.status){
+
+                // TODO: This is gross :D
+                case 403:
+                    log('Forbidden error, check API Key');
+                    break;
+
+                case 999: //server down
+                    log('Harbor server refused connection, may be down');
+                default:
+                    // TODO: retry counting
+                    log('Unhandled error, retyring');
+                    isRetry = true;
+                    if (currentRetryCount--){
+                        setTimeout(postNextToHarbor, interMessageDelayMs);
+                    } else {
+                        log('Retry limit exceeded');
+                    }
+            }
+
         });
 
 
@@ -89,7 +116,7 @@ const self = module.exports = {
      * @param options
      */
     initialize: function (options) {
-        // TODO: add in authentication stuff
+        // TODO: add in authentication
         buffer = new Buffer(options && options.bufferOptions);
         formatter = new Formatter(options && options.formatterOptions);
         tx = new Tx(options && options.txOptions);

@@ -33,7 +33,7 @@ describe( 'Beacon Unit Tests', function () {
         } );
 
         it( 'Init of Beacon should change isInitialized.', function ( done ) {
-            Beacon.initialize({ txOptions: {useLocalServer: true} });
+            Beacon.initialize({ txOptions: { useLocalServer: true, xxxapiKey: 'invalid' } });
             expect( Beacon.isInitialized ).to.equal( true );
             done();
         } );
