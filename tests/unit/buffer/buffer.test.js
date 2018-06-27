@@ -176,6 +176,19 @@ describe('Buffer Unit Tests', function () {
 
         });
 
+        it('Should return the top of the buffer.', function (done) {
+
+            const buff = new Buffer();
+            buff.push({yada: 111});
+            buff.push({yada: 222});
+            buff.push({yada: 333});
+            const top = buff.top;
+            expect(top.yada).to.be.equal(111);
+            expect(buff.entries).to.be.equal(3);
+            done();
+
+        });
+
 
     });
 

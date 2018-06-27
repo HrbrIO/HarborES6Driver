@@ -14,8 +14,10 @@
 
  **********************************/
 
+const Buffer = require('../buffer/buffer');
+const Formatter = require('../formatter/formatter');
+const Tx = require('../tx/beacon-tx');
 
-let isBeaconInitialized = false;
 
 let beaconStatus = {
     lastPost: 0,
@@ -29,32 +31,86 @@ const DEFAULT_OPTIONS = {
     apiKey: 'ABCD321099'
 };
 
-const BEACON_STATES = [ 'not-initialized', 'initialized' ];
+
+let buffer;
+let formatter;
+let tx;
+let txLoopRunning = false;
+let isBeaconInitialized = false;
+let interMessageDelayMs = 500;
+let verbose = true;
+let txOn = true; // disables transmit, used mostly for testing
+
+function log(msg) {
+    if (verbose) console.log(msg);
+}
+
+function postNextToHarbor() {
+
+    if (!txOn) return;
+
+    const nextUp = buffer.top;
+    txLoopRunning = true;
+    tx.post(nextUp)
+        .then(resp => {
+            log('Beacon message sent successfully');
+            buffer.pull();
+            if (buffer.entries) {
+                setTimeout(postNextToHarbor, interMessageDelayMs);
+            } else {
+                txLoopRunning = false; // end the loop, nothing to do
+            }
+        })
+        .catch(err => {
+            log('Beacon message failed...retrying');
+            // TODO: retry counting
+            setTimeout(postNextToHarbor, interMessageDelayMs);
+        });
+
+
+}
 
 const self = module.exports = {
 
-    get isInitialized(){
+    get isInitialized() {
         return isBeaconInitialized;
     },
 
-    get status(){
-        return { happy: true }
-
+    set txOn(shouldTransmit) {
+        txOn = shouldTransmit;
     },
 
-    initialize: function( options ){
+    get pendingTxCount() {
+        return buffer.entries;
+    },
+
+    /**
+     *
+     * @param options
+     */
+    initialize: function (options) {
+        // TODO: add in authentication stuff
+        buffer = new Buffer(options && options.bufferOptions);
+        formatter = new Formatter(options && options.formatterOptions);
+        tx = new Tx(options && options.txOptions);
 
         isBeaconInitialized = true;
+
+
     },
 
-    transmit: function( beaconObject, bypassFormatting ){
+    transmit: function (beaconObject, bypassFormatting) {
+
         if (!self.isInitialized) {
             throw new Error('Cannot transmit on uninitialized beacon.');
         }
+
+        let formattedBeaconObject = formatter.format(beaconObject, bypassFormatting);
+        buffer.push(formattedBeaconObject);
+        // if nothing is being transmitted, kick tx off
+        if (!txLoopRunning) postNextToHarbor();
+
     },
-
-
-
 
 
 }

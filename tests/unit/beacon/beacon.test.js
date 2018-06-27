@@ -12,13 +12,15 @@
 
 const expect = require( "chai" ).expect;
 const Beacon = require( '../../../src/beacon/beacon' );
-
+const _ = require('lodash');
 
 
 
 describe( 'Beacon Unit Tests', function () {
 
     describe( 'Initialize state checks', function () {
+
+        Beacon.txOn = false; // for testing
 
         it( 'Fresh Beacon should be uninitialized.', function ( done ) {
             expect( Beacon.isInitialized ).to.equal(false);
@@ -31,7 +33,7 @@ describe( 'Beacon Unit Tests', function () {
         } );
 
         it( 'Init of Beacon should change isInitialized.', function ( done ) {
-            Beacon.initialize();
+            Beacon.initialize({ txOptions: {useLocalServer: true} });
             expect( Beacon.isInitialized ).to.equal( true );
             done();
         } );
@@ -42,6 +44,24 @@ describe( 'Beacon Unit Tests', function () {
         } );
 
     } );
+
+    describe('Beacon transmit tests', function () {
+
+        Beacon.txOn = true; // for testing
+
+        it('Should send 10 beacons', function (done) {
+            _.times(10, value => {
+                Beacon.transmit({ message: value });
+            });
+
+
+            done();
+        });
+
+
+
+    });
+
 
 
 } );

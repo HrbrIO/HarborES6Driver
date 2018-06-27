@@ -57,6 +57,10 @@ module.exports = class Buffer {
         return sizeof(this.bufferArray);
     }
 
+    get top(){
+        return this.bufferArray[0];
+    }
+
 
     push( messageObject ) {
 
