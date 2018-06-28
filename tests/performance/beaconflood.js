@@ -11,7 +11,7 @@
  **********************************/
 
 const _ = require('lodash');
-const Beacon = require('../../src/beacon/beacon');
+const Beacon = require('../../index');
 
 function drained() {
     const endTime = new Date().getTime();

@@ -1,12 +1,12 @@
 {
   "name": "beacon-es6-proto",
-  "version": "0.0.1",
-  "description": "ES6 Beacon Proto",
+  "version": "0.1.0",
+  "description": "Hrbr.io ES6 Beacon Proto",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
-  },
+    "test": "./node_modules/mocha/bin/mocha tests/bootstrap.test.js tests/**/*.test.js",
+    "testy": "mocha --reporter nyan tests/bootstrap.test.js tests/**/*.test.js"
+    },
   "author": {
     "name": "Mitch Kahn",
     "url": "http://www.hrbr.io"
