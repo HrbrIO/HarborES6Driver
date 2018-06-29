@@ -1,7 +1,7 @@
 const request = require( 'superagent' );
 const BEACON_ENDPOINT = '/v2/beacon';
 
-let LOCAL_HARBOR_SERVICES_URL = 'http://localhost:1337' + BEACON_ENDPOINT;
+let LOCAL_HARBOR_SERVICES_URL = 'http://localhost:2010' + BEACON_ENDPOINT;
 let CLOUD_HARBOR_SERVICES_URL = 'http://cloud.hrbr.io' + BEACON_ENDPOINT;
 let MAGIC_API_KEY = 'ABCD321099'; // Magic key for testing with local Sails mockup
 

@@ -18,20 +18,6 @@ const Buffer = require('../buffer/buffer');
 const Formatter = require('../formatter/formatter');
 const Tx = require('../tx/beacon-tx');
 
-
-let beaconStatus = {
-    lastPost: 0,
-    lastError: null,
-    authenticated: false
-};
-
-const DEFAULT_OPTIONS = {
-    bypassFormatter: false,
-    useBestPractices: true,
-    apiKey: 'ABCD321099'
-};
-
-
 let buffer;
 let formatter;
 let tx;
@@ -46,7 +32,7 @@ let txOn = true; // disables transmit, used mostly for testing
 let drainedCallback;
 
 function log(msg) {
-    if (verbose) console.log( new Date() + ':' + msg);
+    if (verbose) console.log(new Date() + ':' + msg);
 }
 
 function postNextToHarbor() {
@@ -72,9 +58,9 @@ function postNextToHarbor() {
         .catch(err => {
             log('Beacon message failed...Status: ' + err.status);
 
-            if (!err.status && err.code ==='ECONNREFUSED') err.status = 999; // flag for server down
+            if (!err.status && err.code === 'ECONNREFUSED') err.status = 999; // flag for server down
 
-            switch (err.status){
+            switch (err.status) {
 
                 // TODO: This is gross :D
                 case 403:
@@ -87,7 +73,7 @@ function postNextToHarbor() {
                     // TODO: retry counting
                     log('Unhandled error, retyring');
                     isRetry = true;
-                    if (currentRetryCount--){
+                    if (currentRetryCount--) {
                         setTimeout(postNextToHarbor, interMessageDelayMs);
                     } else {
                         log('Retry limit exceeded');
@@ -124,12 +110,7 @@ const self = module.exports = {
         tx = new Tx(options && options.txOptions);
         interMessageDelayMs = ( options && options.txOptions && options.txOptions.interMessageDelayMs ) || 5;
         drainedCallback = options && options.drainedCb;
-        if (options.overrideBeaconUrl){
-            tx.beaconPostUrl = options.overrideBeaconUrl;
-        }
         isBeaconInitialized = true;
-
-
     },
 
     transmit: function (beaconObject, bypassFormatting) {
@@ -144,6 +125,14 @@ const self = module.exports = {
         if (!txLoopRunning) postNextToHarbor();
 
     },
+
+    set beaconPostUrl(overridenUrl) {
+        tx.beaconPostUrl = overridenUrl;
+    },
+
+    get beaconPostUrl() {
+        return tx.beaconPostUrl;
+    }
 
 
 }

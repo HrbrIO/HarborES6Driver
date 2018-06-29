@@ -32,6 +32,8 @@ Beacon.initialize({
     drainedCb: drained
 });
 
+//Beacon.beaconPostUrl = "http://localhost:2010/v2/peacon";
+
 const startTime = new Date().getTime();
 _.times(1000, (seqNum) => {
     Beacon.transmit({source: 'beaconflood.js', random: Math.random(), seqNum: seqNum });

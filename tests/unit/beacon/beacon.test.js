@@ -39,8 +39,14 @@ describe( 'Beacon Unit Tests', function () {
 
         it( 'Initted Beacon should NOT throw Error on transmit.', function ( done ) {
             expect( Beacon.transmit ).to.not.throw();
+            // TODO: this should be in its own test, but there were sequencing issues...
+            Beacon.beaconPostUrl = 'beer';
+            expect(Beacon.beaconPostUrl).to.equal('beer');
             done();
         } );
+
+
+
 
     } );
 
@@ -58,7 +64,6 @@ describe( 'Beacon Unit Tests', function () {
 
 
     });
-
 
 
 } );
