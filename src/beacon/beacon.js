@@ -124,6 +124,9 @@ const self = module.exports = {
         tx = new Tx(options && options.txOptions);
         interMessageDelayMs = ( options && options.txOptions && options.txOptions.interMessageDelayMs ) || 5;
         drainedCallback = options && options.drainedCb;
+        if (options.overrideBeaconUrl){
+            tx.beaconPostUrl = options.overrideBeaconUrl;
+        }
         isBeaconInitialized = true;
 
 
