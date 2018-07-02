@@ -76,7 +76,8 @@ function postNextToHarbor() {
                     if (currentRetryCount--) {
                         setTimeout(postNextToHarbor, interMessageDelayMs);
                     } else {
-                        log('Retry limit exceeded');
+                        log('Retry limit exceeded, but this is needs work so retry anyway');
+                        setTimeout(postNextToHarbor, interMessageDelayMs);
                     }
             }
 
