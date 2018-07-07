@@ -1,70 +1,95 @@
-const expect = require( "chai" ).expect;
-const BeaconTx = require( '../../../src/tx/beacon-tx' );
-const magicApiKey = require( '../../environment' ).magicApiKey;
+const expect = require("chai").expect;
+const BeaconTx = require('../../../src/tx/beacon-tx');
+const magicApiKey = require('../../environment').magicApiKey;
 const testApiKey = 'BeerAndChickenWings';
+const _ = require('lodash');
 
+const options = {
+    beaconInstanceId: 'test-binsid',
+    appVersionId: 'test-appverid',
+    beaconVersionId: 'test-bverid'
+};
 
-describe( 'Beacon-TX Unit Tests', function () {
+describe('Beacon-TX Unit Tests', function () {
 
-    describe( 'Endpoints', function () {
+    describe('Endpoints', function () {
 
-        it( 'should return a local URL string', function ( done ) {
-            const btx = new BeaconTx( { useLocalServer: true } );
-            expect( btx.beaconPostUrl ).to.equal( 'http://localhost:2010/v2/beacon' );
-            expect( btx.isUsingLocal ).to.equal( true );
+        it('should return a local URL string', function (done) {
+            const btx = new BeaconTx({useLocalServer: true});
+            expect(btx.beaconPostUrl).to.equal('http://localhost:2010/v2/beacon');
+            expect(btx.isUsingLocal).to.equal(true);
             done();
-        } );
+        });
 
-        it( 'should return a cloud URL string', function ( done ) {
+        it('should return a cloud URL string', function (done) {
             const btx = new BeaconTx();
-            expect( btx.beaconPostUrl ).to.equal( 'http://cloud.hrbr.io/v2/beacon' );
-            expect( btx.isUsingLocal ).to.equal( false );
+            expect(btx.beaconPostUrl).to.equal('http://cloud.hrbr.io/v2/beacon');
+            expect(btx.isUsingLocal).to.equal(false);
             done();
-        } );
+        });
 
 
-    } );
+    });
 
-    describe( 'API Key', function () {
+    describe('API Key', function () {
 
-        it( 'should return the magic api key when no key is passed', function ( done ) {
+        it('should return the magic api key when no key is passed', function (done) {
             const btx = new BeaconTx();
-            expect( btx.apiKey ).to.equal( magicApiKey );
+            expect(btx.apiKey).to.equal(magicApiKey);
             done();
-        } );
+        });
 
-        it( 'should return the api key when a specific key is passed', function ( done ) {
-            const btx = new BeaconTx( { apiKey: testApiKey } );
-            expect( btx.apiKey ).to.equal( testApiKey );
+        it('should return the api key when a specific key is passed', function (done) {
+            const btx = new BeaconTx({apiKey: testApiKey});
+            expect(btx.apiKey).to.equal(testApiKey);
             done();
-        } );
+        });
 
-    } );
+    });
 
-    describe( 'HTTP TX to Local Server', function () {
+    describe('Options', function () {
 
-        it( 'should return a 200 if the local server is running', function ( done ) {
-            const btx = new BeaconTx( { useLocalServer: true } );
-            btx.post( { cpuUtil: 0.98 } )
-                .then( response => {
-                    expect( response ).to.be.an( 'object' );
+
+        it('should return the passed options', function (done) {
+            const btx = new BeaconTx(options);
+            expect(btx.beaconInstanceId).to.equal(options.beaconInstanceId);
+            expect(btx.appVersionId).to.equal(options.appVersionId);
+            expect(btx.beaconVersionId).to.equal(options.beaconVersionId);
+
+            done();
+        });
+
+
+    });
+
+    describe('HTTP TX to Local Server', function () {
+
+        it('should return a 200 if the local server is running', function (done) {
+
+            let opt = _.cloneDeep(options);
+            opt.useLocalServer = true;
+
+            const btx = new BeaconTx(opt);
+            btx.post({cpuUtil: 0.98})
+                .then(response => {
+                    expect(response).to.be.an('object');
                     done();
-                } )
-                .catch( err => {
-                    console.error( "Can't post, check to make sure REST endpoint is up" );
-                } );
-        } );
+                })
+                .catch(err => {
+                    console.error("Can't post, check to make sure REST endpoint is up");
+                });
+        });
 
-    } );
+    });
 
-    describe( 'Static debug methods/getters/etc.', function () {
+    describe('Static debug methods/getters/etc.', function () {
 
-        it( 'should return the local Harbor services URL', function ( done ) {
-            expect( BeaconTx.localHarborServicesUrl ).to.equal( 'http://localhost:2010/v2/beacon' );
-            expect( BeaconTx.cloudHarborServicesUrl ).to.equal( 'http://cloud.hrbr.io/v2/beacon' );
+        it('should return the local Harbor services URL', function (done) {
+            expect(BeaconTx.localHarborServicesUrl).to.equal('http://localhost:2010/v2/beacon');
+            expect(BeaconTx.cloudHarborServicesUrl).to.equal('http://cloud.hrbr.io/v2/beacon');
             done();
-        } );
+        });
 
-    } );
+    });
 
-} );
+});

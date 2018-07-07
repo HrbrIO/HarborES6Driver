@@ -9,113 +9,137 @@
  **********************************/
 
 
-const expect = require( "chai" ).expect;
-const Formatter = require( '../../../src/formatter/formatter' );
-const _ = require( 'lodash' );
+const expect = require("chai").expect;
+const Formatter = require('../../../src/formatter/formatter');
+const _ = require('lodash');
 
 const COMMON_FIELDS = {
     beer: 'Harp',
-    wine: { region: 'Paso Robles', vineyard: 'Hidden Oaks' }
+    wine: {region: 'Paso Robles', vineyard: 'Hidden Oaks'}
 };
 
 
-describe( 'Formatter Unit Tests', function () {
+describe('Formatter Unit Tests', function () {
 
-    describe( 'Static getters', function () {
+    describe('Static getters', function () {
 
-        it( 'should return the best practices object', function ( done ) {
+        it('should return the best practices object', function (done) {
             const bpFields = Formatter.bestPracticeFields;
-            expect( bpFields ).to.be.an( 'object' );
-            expect( bpFields.recordedAt ).to.be.a( 'number' );
+            expect(bpFields).to.be.an('object');
             done();
-        } );
+        });
 
-    } );
+    });
 
-    describe( 'Supplemental field disables in constructor', function () {
+    describe('Supplemental field disables in constructor', function () {
 
-        it( 'formatter should have BP and all formatting disabled', function ( done ) {
-            const fmtr = new Formatter( { disableBestPractices: true, disableAllFormatting: true } );
-            expect( fmtr.disableBestPractices ).to.equal( true );
-            expect( fmtr.disableAllFormatting ).to.equal( true );
+        it('formatter should have BP and all formatting disabled', function (done) {
+            const fmtr = new Formatter({disableBestPractices: true, disableAllFormatting: true});
+            expect(fmtr.disableBestPractices).to.equal(true);
+            expect(fmtr.disableAllFormatting).to.equal(true);
             done();
-        } );
+        });
 
         // This test is redundant for coverage, but here for sanity check.
-        it( 'formatter should have BP and all formatting ENABLED', function ( done ) {
+        it('formatter should have BP and all formatting ENABLED', function (done) {
             const fmtr = new Formatter();
-            expect( fmtr.disableBestPractices ).to.equal( false );
-            expect( fmtr.disableAllFormatting ).to.equal( false );
+            expect(fmtr.disableBestPractices).to.equal(false);
+            expect(fmtr.disableAllFormatting).to.equal(false);
             done();
-        } );
+        });
 
-    } );
+    });
 
-    describe( 'Formatting with BP turned on/off', function () {
+    describe('Formatting with/without becaonMessageType', function () {
 
-        it( 'formatter should return object with BP fields attached', function ( done ) {
+        it('formatter should return object with BP fields attached, no beaconMessageType', function (done) {
             const fmtr = new Formatter();
-            const beaconMsg = { cpu: 0.98, weather: 'stormy' };
-            const formatted = fmtr.format( beaconMsg );
-            expect( formatted ).to.be.an( 'object' );
-            expect( formatted.cpu ).to.equal( beaconMsg.cpu );
-            expect( formatted.weather ).to.equal( beaconMsg.weather );
-            expect( formatted.recordedAt ).to.be.a( 'number' );
+            const beaconMsg = {cpu: 0.98, weather: 'stormy'};
+            const formatted = fmtr.format(null, beaconMsg);
+            expect(formatted).to.be.an('object');
+            expect(formatted.data).to.be.an('object');
+            expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
+            expect(formatted.data.weather).to.equal(beaconMsg.weather);
+            expect(formatted.dataTimestamp).to.be.a('number');
+            expect(formatted.beaconMessageType).to.be.null;
             done();
-        } );
+        });
 
-        it( 'formatter should return object without BP fields attached', function ( done ) {
-            const fmtr = new Formatter( { disableBestPractices: true } );
-            const beaconMsg = { cpu: 0.98, weather: 'stormy' };
-            const formatted = fmtr.format( beaconMsg );
-            expect( formatted ).to.be.an( 'object' );
-            expect( formatted.cpu ).to.equal( beaconMsg.cpu );
-            expect( formatted.weather ).to.equal( beaconMsg.weather );
-            expect( formatted ).to.not.have.property('recordedAt');
+        it('formatter should return object with BP fields attached, and beaconMessageType', function (done) {
+            const bmt = "CPU_AND_WEATHER";
+            const fmtr = new Formatter();
+            const beaconMsg = {cpu: 0.98, weather: 'stormy'};
+            const formatted = fmtr.format(bmt, beaconMsg);
+            expect(formatted).to.be.an('object');
+            expect(formatted.data).to.be.an('object');
+            expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
+            expect(formatted.data.weather).to.equal(beaconMsg.weather);
+            expect(formatted.dataTimestamp).to.be.a('number');
+            expect(formatted.beaconMessageType).to.equal(bmt);
             done();
-        } );
+        });
 
-    } );
+    });
 
-    describe( 'Formatting with BP turned on and Common Fields', function () {
 
-        it( 'formatter should return object with BP & CF  attached', function ( done ) {
-            const fmtr = new Formatter( { commonFields: COMMON_FIELDS });
-            const beaconMsg = { cpu: 0.98, weather: 'stormy' };
-            const formatted = fmtr.format( beaconMsg );
-            expect( formatted ).to.be.an( 'object' );
-            expect( formatted.cpu ).to.equal( beaconMsg.cpu );
-            expect( formatted.weather ).to.equal( beaconMsg.weather );
-            expect( formatted.recordedAt ).to.be.a( 'number' );
-            expect( formatted.beer ).to.equal( COMMON_FIELDS.beer );
-            expect( formatted.wine.region ).to.equal( COMMON_FIELDS.wine.region );
-            expect( formatted.wine.vineyard ).to.equal( COMMON_FIELDS.wine.vineyard );
+    // describe('Formatting with BP turned on/off', function () {
+    //
+    //     it('formatter should return object with BP fields attached, no beaconMessageType', function (done) {
+    //         const fmtr = new Formatter();
+    //         const beaconMsg = {cpu: 0.98, weather: 'stormy'};
+    //         const formatted = fmtr.format(beaconMsg);
+    //         expect(formatted).to.be.an('object');
+    //         expect(formatted.data).to.be.an('object');
+    //         expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
+    //         expect(formatted.data.weather).to.equal(beaconMsg.weather);
+    //         //FIXME: there are no BP fields right now, so nothing to really test
+    //         //expect( formatted.data.recordedAt ).to.be.a( 'number' );
+    //
+    //         expect(formatted.dataTimestamp).to.be.a('number');
+    //         expect(formatted.beaconMessageType).to.be.undefined;
+    //
+    //         done();
+    //     });
+    //
+    //     // it( 'formatter should return object without BP fields attached', function ( done ) {
+    //     //     const fmtr = new Formatter( { disableBestPractices: true } );
+    //     //     const beaconMsg = { cpu: 0.98, weather: 'stormy' };
+    //     //     const formatted = fmtr.format( beaconMsg );
+    //     //     expect( formatted ).to.be.an( 'object' );
+    //     //     expect( formatted.cpu ).to.equal( beaconMsg.cpu );
+    //     //     expect( formatted.weather ).to.equal( beaconMsg.weather );
+    //     //     expect( formatted ).to.not.have.property('recordedAt');
+    //     //     done();
+    //     // } );
+    //
+    // });
+
+    describe('Formatting with Common Fields', function () {
+
+        it('formatter should return object with BP & CF  attached', function (done) {
+            const fmtr = new Formatter({commonFields: COMMON_FIELDS});
+            const beaconMsg = {cpu: 0.98, weather: 'stormy'};
+            const formatted = fmtr.format(null, beaconMsg);
+            expect(formatted).to.be.an('object');
+            expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
+            expect(formatted.data.weather).to.equal(beaconMsg.weather);
+            expect(formatted.data.beer).to.equal(COMMON_FIELDS.beer);
+            expect(formatted.data.wine.region).to.equal(COMMON_FIELDS.wine.region);
+            expect(formatted.data.wine.vineyard).to.equal(COMMON_FIELDS.wine.vineyard);
             done();
-        } );
+        });
 
-        it( 'One shot format bypass: formatter should return object WITHOUT BP & CF  attached', function ( done ) {
-            const fmtr = new Formatter( { commonFields: COMMON_FIELDS } );
-            const beaconMsg = { cpu: 0.98, weather: 'stormy' };
-            const formatted = fmtr.format( beaconMsg, true ); // bypass formatter
-            expect( formatted ).to.be.an( 'object' );
-            expect( formatted.cpu ).to.equal( beaconMsg.cpu );
-            expect( formatted.weather ).to.equal( beaconMsg.weather );
-            expect( formatted ).to.not.have.property( 'recordedAt' );
-            expect( formatted ).to.not.have.property( 'beer' );
-            expect( formatted ).to.not.have.property( 'wine' );
-            done();
-        } );
 
-        it( 'formatter should throw error with non-object CF field', function ( done ) {
+        it('formatter should throw error with non-object CF field', function (done) {
             // This is a little trick to catch errors in constructors
-            const func = function () { new Formatter( { commonFields: 'this should crash' } ) };
-            expect( func ).to.throw();
+            const func = function () {
+                new Formatter({commonFields: 'this should crash'})
+            };
+            expect(func).to.throw();
             done();
-        } );
+        });
+
+    });
 
 
-
-    } );
-
-
-} );
+});

@@ -21,9 +21,12 @@ function drained() {
 
 // Set near-minimum message delay
 Beacon.initialize({
+    apiKey: 'ABCD4949',
+    appVersionId: 'io.hrbr.beaconflood:0.2.0',
+    beaconVersionId: 'beacon-es6-proto:0.3.0',
+    beaconInstanceId: 'some-system-in-calif',
     txOptions: {
         useLocalServer: true,
-        apiKey: 'ABCD4949',
         interMessageDelayMs: 1
     },
     bufferOptions: {
@@ -36,7 +39,7 @@ Beacon.initialize({
 
 const startTime = new Date().getTime();
 _.times(1000, (seqNum) => {
-    Beacon.transmit({source: 'beaconflood.js', random: Math.random(), seqNum: seqNum });
+    Beacon.transmit({ beaconMessageType: 'BEACON_FLOOD_MSG', data: {source: 'beaconflood.js', random: Math.random(), seqNum: seqNum }});
 });
 
 

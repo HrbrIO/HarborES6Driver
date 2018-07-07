@@ -17,6 +17,7 @@
 const Buffer = require('../buffer/buffer');
 const Formatter = require('../formatter/formatter');
 const Tx = require('../tx/beacon-tx');
+const assignIn = require('lodash').assignIn;
 
 let buffer;
 let formatter;
@@ -30,6 +31,7 @@ let isRetry = false;
 let verbose = true;
 let txOn = true; // disables transmit, used mostly for testing
 let drainedCallback;
+let allowNullMessageType = false;
 
 function log(msg) {
     if (verbose) console.log(new Date() + ':' + msg);
@@ -102,25 +104,57 @@ const self = module.exports = {
 
     /**
      *
-     * @param options
+     * @param {Object} options
+     * @param {String} options.apiKey  your api key. Required.
+     * @param {Boolean} [options.allowNullMessageType=false ] allow null message type (bypass error)
+     * @param {String} [options.beaconVersionId=null]  overrides the built in beaconVersionId.
+     * @param {String} [options.appVersionId=null]  concatenated appId plus version. Example: io.hrbr.superapp:1.2.1
+     * @param {String} [options.beaconInstanceId=null] unique Id for this instance, usually tied to the H/W or VM, etc.
+     * @param {Object} [options.bufferOptions=null] allows direct setting of the Buffer block's options. See Buffer class.
+     * @param {Object} [options.txOptions=null] allows direct setting of the Transmitter block's options. See Beacon-TX class.
+     * @param {Number} [options.interMessageDelayMs=5]  ms between messages. Defaults to 5ms.
+     * @param {Function} [options.drainedCb=null]  callback for when the message queue is drained. Useful for testing.
+     * @param {Object} [options.formatter=null]  allows direct setting of the Formatter block's options. See Beacon-TX class.
+     *
      */
     initialize: function (options) {
-        // TODO: add in authentication
+        // TODO: add in authentication?
+
+        // Error out if no API Key
+        if (!options.apiKey) throw new Error("Missing apiKey");
+
         buffer = new Buffer(options && options.bufferOptions);
         formatter = new Formatter(options && options.formatterOptions);
-        tx = new Tx(options && options.txOptions);
-        interMessageDelayMs = ( options && options.txOptions && options.txOptions.interMessageDelayMs ) || 5;
-        drainedCallback = options && options.drainedCb;
+
+        let txOptions = ( options && options.txOptions ) || {};
+        txOptions = assignIn(txOptions, {
+            apiKey: options.apiKey,
+            appVersionId: options.appVersionId,
+            beaconInstanceId: options.beaconInstanceId,
+            beaconVersionId: options.beaconVersionId
+        });
+        tx = new Tx(txOptions);
+
+        interMessageDelayMs = ( options.interMessageDelayMs ) || 5;
+        drainedCallback = options.drainedCb;
         isBeaconInitialized = true;
     },
 
-    transmit: function (beaconObject, bypassFormatting) {
+    /**
+     * @param {Object} [beaconObject=null] Beacon object
+     * @param {String} [beaconObject.beaconMessageType=null]  beacon message type
+     * @param { Object } [beaconObject.data = null ]  beacon data
+     */
+    transmit: function (beaconObject) {
 
         if (!self.isInitialized) {
             throw new Error('Cannot transmit on uninitialized beacon.');
         }
 
-        let formattedBeaconObject = formatter.format(beaconObject, bypassFormatting);
+        const msgType = beaconObject && beaconObject.beaconMessageType;
+        const data = beaconObject && beaconObject.data;
+
+        let formattedBeaconObject = formatter.format(msgType, data);
         buffer.push(formattedBeaconObject);
         // if nothing is being transmitted, kick tx off
         if (!txLoopRunning) postNextToHarbor();
