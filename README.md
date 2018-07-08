@@ -27,8 +27,6 @@ libraries. We may write framework specific version later.
 ## Publishing New Versions to NPM
 
 Steps:
-- Once you're ready to publish `webpack` it. The config is currently setup for inline source map and no uglification 
-since this is very much WIP.
 - Update the `package.json` to the appropriate rev level.
 - `npm publish`
 
