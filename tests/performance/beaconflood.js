@@ -76,7 +76,6 @@ if (!args.h){
             });
     } else {
         console.log('Flooding local server'.green);
-
         sendBeacons();
     }
 
