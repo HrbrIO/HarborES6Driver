@@ -135,7 +135,7 @@ const self = module.exports = {
         });
         tx = new Tx(txOptions);
 
-        interMessageDelayMs = ( options.interMessageDelayMs ) || 5;
+        interMessageDelayMs = ( options && options.interMessageDelayMs ) || 5;
         drainedCallback = options.drainedCb;
         isBeaconInitialized = true;
     },

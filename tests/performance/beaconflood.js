@@ -50,12 +50,12 @@ if (!args.h){
         beaconVersionId: 'beacon-es6-proto:0.3.0',
         beaconInstanceId: beaconInstanceId,
         txOptions: {
-            useLocalServer: !useRemoteServer,
-            interMessageDelayMs: loopDelay
+            useLocalServer: !useRemoteServer
         },
         bufferOptions: {
             lengthLimit: 100000
         },
+        interMessageDelayMs: loopDelay,
         drainedCb: drained
     });
 
