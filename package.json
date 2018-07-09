@@ -1,6 +1,6 @@
 {
   "name": "beacon-es6-proto",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Hrbr.io ES6 Beacon Proto",
   "main": "index.js",
   "scripts": {
