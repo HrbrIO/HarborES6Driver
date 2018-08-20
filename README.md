@@ -14,7 +14,7 @@ libraries. We may write framework specific versions later.
 - Optional message retries
 - Optional inter-message gap 
 
-## Usage in a Node.js Project
+## Usage in an Existing Node.js Project
 
 To add the driver to your project: `yarn add beacon-es6-driver`. You can also use `npm` but we recommend `yarn`.
 
@@ -70,7 +70,7 @@ The `Beacon.initialize` method is passed all options as an object. The fields ar
 | formatterOptions.disableBestPractices | The driver will automatically attach fields that Harbor considers "best practices". (As of this version, there are no such fields.). | false ||
 
 
-## Installation for NodeJS Apps (and Beaconflood.js)
+## Installation to Create Your Own Variant
 
 - Install Node.js if it is not already installed.
     - Node version must support ES6 features, especially closures/fat-arrow functions.
