@@ -1,10 +1,74 @@
-# BeaconES6Proto
+# Harbor ES6/Javascript Beacon Driver
 
-Example Beacon driver in ES6 Javascript.
+Example Beacon driver in ES6 Javascript. This package is intended to be used for low-level communication
+with Harbor as a part of your own Javascript Beacon projects. 
 
 This version will be written primarily for use in NodeJS apps, but the repo will include the ability to run Browserfy to 
-spit out a browser-usable version (I hope). The idea is to be generic and not dependant on Angular, React, etc. networking
+spit out a browser-usable version. The idea is to be generic and not dependant on Angular, React, etc. networking
 libraries. We may write framework specific versions later.
+
+## Features
+
+- Configurable, full-featured ES6 beacon driver
+- Optional in-memory buffering with buffer limits based on memory usage, or number of entries.
+- Optional message retries
+- Optional inter-message gap 
+
+## Usage in a Node.js Project
+
+To add the driver to your project: `yarn add beacon-es6-driver`. You can also use `npm` but we recommend `yarn`.
+
+Initialize the driver with:
+
+```$xslt
+const Beacon = require('beacon-es6-driver');
+
+...
+
+Beacon.initialize({
+        apiKey: "[your-api-key]",
+        appVersionId: "io.somecompany.mycoolapp:1.0.0",
+        beaconVersionId: "[identifier for beacon version]",
+        beaconInstanceId: "[instance identifier such as a device UDID or server IP]",
+        bufferOptions: {
+            lengthLimit: 100000
+        },
+        interMessageDelayMs: 5000
+    });
+    
+```
+All options are documented below.
+
+Once the beacon driver is initialized, you can send a beacon with:
+
+`Beacon.transmit({ beaconMessageType: 'TEST_MSG', data: {...});`
+
+`beaconMessageType` is application dependent, as is the `data` you send. Some foghorn and tug implementations
+may require specific message types and data schema, so check your documentation.
+
+## Configuration Options
+
+The `Beacon.initialize` method is passed all options as an object. The fields are shown in the table below.
+
+| Field    |      Description      |  Default Value | Required? |
+|:----------|:---------------------|:--------------:|:----------:|
+| apiKey   |  Your Harbor API Key  | n/a            |  X |
+| appVersionId | The name and version of the app using this driver. Typically something like `io.myco.myapp:2.1.3` |||
+| beaconVersionId | The name and version of the beacon driver. This driver can populate this automatically, or you can override it. | [latest version] ||
+| beaconInstanceId | An identifier for the host of this beacon. Typically this is a unique identifier for the individual device or system.|||
+| interMessageDelayMs | Time between message transmission attempts in milliseconds. | 5 ||
+| drainedCb | Callback when the buffer has been drained. Signature: `()=>{}` |||
+| bufferOptions | An object describing advanced buffering options.|||
+| bufferOptions.lengthLimit | Maximum number of messages buffered before dropping | 100 ||
+| bufferOptions.memoryLimit | *Approximate* limit for buffer size in KB. | 0 = off ||
+| bufferOptions.onLimit | Callback when one of the limits is reached. Callback signature is: `({memoryLimitReached: BOOL, lengthLimitReached: BOOL})=>{}`|||
+| bufferOptions.dropOnLimit | Whether to drop the oldest (default) or newest messages when buffer is full. Only the value 'oldest' has meaning. Anything else will drop newest. | 'oldest' ||
+| txOptions | An object describing advanced Transmitter options |||
+| txOptions.useLocalServer | Boolean indicating to use a local test server instead of Harbor. Set this field to true if you are using the HarborDevMock server. | false ||
+| formatterOptions | An object describing data field modifications to be performed by the driver. |||
+| formatterOptions.commonFields | Fields you want added to every `data` object transmitted. For example, if you want to add the fields `{ color: 'red', day: 'Sunday'}` to every single message transmitted, pass that object here. |||
+| formatterOptions.disableBestPractices | The driver will automatically attach fields that Harbor considers "best practices". (As of this version, there are no such fields.). | false ||
+
 
 ## Installation for NodeJS Apps (and Beaconflood.js)
 

@@ -3,6 +3,11 @@
   "version": "0.4.0",
   "description": "Hrbr.io ES6 Beacon Driver",
   "main": "index.js",
+  "homepage": "https://www.hrbr.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HrbrIO/HarborES6Driver"
+  },
   "scripts": {
     "test": "mocha tests/bootstrap.test.js tests/**/*.test.js",
     "testy": "mocha --reporter nyan tests/bootstrap.test.js tests/**/*.test.js",
