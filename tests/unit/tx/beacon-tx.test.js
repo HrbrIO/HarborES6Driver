@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const BeaconTx = require('../../../src/tx/beacon-tx');
+const BeaconTx = require('../../../src/transmitter/transmitter');
 const magicApiKey = require('../../environment').magicApiKey;
 const testApiKey = 'BeerAndChickenWings';
 const _ = require('lodash');

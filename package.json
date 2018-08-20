@@ -1,11 +1,12 @@
 {
-  "name": "beacon-es6-proto",
-  "version": "0.3.0",
-  "description": "Hrbr.io ES6 Beacon Proto",
+  "name": "beacon-es6-driver",
+  "version": "0.4.0",
+  "description": "Hrbr.io ES6 Beacon Driver",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/bootstrap.test.js tests/**/*.test.js",
-    "testy": "mocha --reporter nyan tests/bootstrap.test.js tests/**/*.test.js"
+    "testy": "mocha --reporter nyan tests/bootstrap.test.js tests/**/*.test.js",
+    "flood": "node tests/performance/beaconflood.js"
   },
   "author": {
     "name": "Mitch Kahn",

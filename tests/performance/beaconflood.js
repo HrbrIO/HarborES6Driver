@@ -20,7 +20,7 @@ const args = require('minimist')(process.argv.slice(2));
 const loopDelay = args.l || 5000;
 const apiKey = args.k || 'ABCD4949';
 const beaconInstanceId = args.i || 'some-system-in-calif';
-const appVersionId = args.a || 'io.hrbr.beaconflood:0.2.0';
+const appVersionId = args.a || 'io.hrbr.beaconflood:0.3.0';
 const loopCount = args.c || 10;
 const useRemoteServer = !!(args.r);
 

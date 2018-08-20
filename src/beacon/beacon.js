@@ -16,7 +16,7 @@
 
 const Buffer = require('../buffer/buffer');
 const Formatter = require('../formatter/formatter');
-const Tx = require('../tx/beacon-tx');
+const Tx = require('../transmitter/transmitter');
 const assignIn = require('lodash').assignIn;
 
 let buffer;
