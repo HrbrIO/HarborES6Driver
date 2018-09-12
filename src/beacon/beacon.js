@@ -65,6 +65,7 @@ function postNextToHarbor() {
             switch (err.status) {
 
                 // TODO: This is gross :D
+                case 401:
                 case 403:
                     log('Forbidden error, check API Key');
                     break;

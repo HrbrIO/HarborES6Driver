@@ -2,7 +2,7 @@ const request = require('superagent');
 const BEACON_ENDPOINT = '/v2/beacon';
 
 let LOCAL_HARBOR_SERVICES_URL = 'http://localhost:2010' + BEACON_ENDPOINT;
-let CLOUD_HARBOR_SERVICES_URL = 'https://harbor-services-staging.herokuapp.com/beacon';
+let CLOUD_HARBOR_SERVICES_PRODUCTION_URL = 'https://harbor-services-production.herokuapp.com/beacon';
 let MAGIC_API_KEY = 'ABCD321099'; // Magic key for testing with local Sails mockup
 
 module.exports = class BeaconTX {
@@ -17,7 +17,7 @@ module.exports = class BeaconTX {
      * @param {String} [ options.beaconInstanceId ] - Normally a UDID for the device/VM.
      */
     constructor(options) {
-        this.beaconPostUrl = options && options.useLocalServer ? LOCAL_HARBOR_SERVICES_URL : CLOUD_HARBOR_SERVICES_URL;
+        this.beaconPostUrl = options && options.useLocalServer ? LOCAL_HARBOR_SERVICES_URL : CLOUD_HARBOR_SERVICES_PRODUCTION_URL;
         this.isUsingLocal = !!(options && options.useLocalServer);
         this.apiKey = (options && options.apiKey) || MAGIC_API_KEY;
         this.beaconVersionId = options && options.beaconVersionId;
@@ -37,6 +37,7 @@ module.exports = class BeaconTX {
         // set guaranteed fields....
         let req = request.post(this.beaconPostUrl)
             .send(message.data)
+            .set('User-Agent', "Hrbr.io-ES6/0.0.1")
             .set('apikey', this.apiKey)
             .set('Accept', 'application/json');
 

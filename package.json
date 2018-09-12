@@ -1,6 +1,6 @@
 {
   "name": "beacon-es6-driver",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Hrbr.io ES6 Beacon Driver",
   "main": "index.js",
   "homepage": "https://www.hrbr.io",
@@ -25,13 +25,15 @@
     "minimist": "^1.2.0",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
-    "supertest": "^3.1.0"
+    "supertest": "^3.1.0",
+    "webpack-cli": "^3.1.0"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "sizeof": "^1.0.0",
     "superagent": "^3.8.3",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "webpack": "^4.16.5"
   }
 }

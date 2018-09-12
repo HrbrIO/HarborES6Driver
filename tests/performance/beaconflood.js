@@ -10,6 +10,11 @@
 
  **********************************/
 
+ /*
+
+ wss://harbor-services-staging.herokuapp.com/socket/194368bc-e2e7-1004-8690-f47503f49f41:PRIMARY:PROD_io.hrbr.beaconflood:0.3.0:BEACON_FLOOD_MSG
+  */
+
 const request = require('superagent');
 const util = require('util');
 const _ = require('lodash');
@@ -47,7 +52,7 @@ if (!args.h){
     Beacon.initialize({
         apiKey: apiKey,
         appVersionId: appVersionId,
-        beaconVersionId: 'beacon-es6-proto:0.3.0',
+        beaconVersionId: appVersionId, //'beacon-es6-proto:0.3.0',
         beaconInstanceId: beaconInstanceId,
         txOptions: {
             useLocalServer: !useRemoteServer
