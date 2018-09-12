@@ -2,7 +2,7 @@ const request = require('superagent');
 const BEACON_ENDPOINT = '/v2/beacon';
 
 let LOCAL_HARBOR_SERVICES_URL = 'http://localhost:2010' + BEACON_ENDPOINT;
-let CLOUD_HARBOR_SERVICES_PRODUCTION_URL = 'https://harbor-services-production.herokuapp.com/beacon';
+let CLOUD_HARBOR_SERVICES_PRODUCTION_URL = 'https://harbor-services.herokuapp.com/beacon';
 let MAGIC_API_KEY = 'ABCD321099'; // Magic key for testing with local Sails mockup
 
 module.exports = class BeaconTX {
