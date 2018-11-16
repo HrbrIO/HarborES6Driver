@@ -64,7 +64,7 @@ The `Beacon.initialize` method is passed all options as an object. The fields ar
 | bufferOptions.onLimit | Callback when one of the limits is reached. Callback signature is: `({memoryLimitReached: BOOL, lengthLimitReached: BOOL})=>{}`|||
 | bufferOptions.dropOnLimit | Whether to drop the oldest (default) or newest messages when buffer is full. Only the value 'oldest' has meaning. Anything else will drop newest. | 'oldest' ||
 | txOptions | An object describing advanced Transmitter options |||
-| txOptions.useLocalServer | Boolean indicating to use a local test server instead of Harbor. Set this field to true if you are using the HarborDevMock server. | false ||
+| txOptions.server | String indicating which server to use. Options are 'local', 'production', 'staging'. NOTE: This is unrelated your API key designations. Unless you are working at Harbor, you should not be using anything other than production. | production ||
 | formatterOptions | An object describing data field modifications to be performed by the driver. |||
 | formatterOptions.commonFields | Fields you want added to every `data` object transmitted. For example, if you want to add the fields `{ color: 'red', day: 'Sunday'}` to every single message transmitted, pass that object here. |||
 | formatterOptions.disableBestPractices | The driver will automatically attach fields that Harbor considers "best practices". (As of this version, there are no such fields.). | false ||

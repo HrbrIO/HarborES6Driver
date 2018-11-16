@@ -48,7 +48,10 @@ describe('Beacon Unit Tests', function () {
         it('Should send 10 beacons', function (done) {
             Beacon.initialize({
                 apiKey: 'ABCD321099',
-                txOptions: {useLocalServer: true},
+                appVersionId: 'io.hrbr.mochatestapp:9.8.7',
+                beaconVersionId: 'io.hrbr.mochatestbeacon:5.4.3',
+                beaconInstanceId: 'this_must_be_the_place',
+                txOptions: { server: 'local'},
                 drainedCb: () => done()
             });
             Beacon.txOn = true; // for testing
@@ -71,21 +74,7 @@ describe('Beacon Unit Tests', function () {
 
     });
 
-    // describe('Beacon transmit tests', function () {
-    //
-    //     Beacon.initialize({apiKey: 'ABCD321099', txOptions: {useLocalServer: true}});
-    //     Beacon.txOn = true; // for testing
-    //
-    //     it('Should send 10 beacons', function (done) {
-    //         _.times(10, value => {
-    //             Beacon.transmit({ beaconMessageType: "TEST_STREAM", data: { value: value }});
-    //         });
-    //         // TODO: Right now, pass/fail for this visual inspection of the Sails DB. Not great.
-    //         done();
-    //     });
-    //
-    //
-    // });
+
 
 
 });

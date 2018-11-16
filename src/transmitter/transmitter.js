@@ -1,28 +1,35 @@
 const request = require('superagent');
-const BEACON_ENDPOINT = '/v2/beacon';
+const BEACON_ENDPOINT = '/beacon';
 
-let LOCAL_HARBOR_SERVICES_URL = 'http://localhost:2010' + BEACON_ENDPOINT;
-let CLOUD_HARBOR_SERVICES_PRODUCTION_URL = 'https://harbor-services.herokuapp.com/beacon';
-let MAGIC_API_KEY = 'ABCD321099'; // Magic key for testing with local Sails mockup
+const SERVERS = {
+    production: 'https://harbor-stream.herokuapp.com/beacon',
+    staging: 'https://harbor-stream-staging.herokuapp.com/beacon',
+    local: 'http://localhost:2020' + BEACON_ENDPOINT
+};
+
+let MAGIC_API_KEY = 'ABCD321099'; // Magic key for testing with local node mockup
 
 module.exports = class BeaconTX {
 
     /**
      *
      * @param {Object} options - Options for the transmitter
-     * @param {Boolean} options.useLocalServer - Transmit to a local mockup server
+     * @param [{String}] options.server - [ production, staging, local ]
      * @param {String} options.apiKey - API key for this client. If not specified, the test API key is used
      * @param {String} [ options.beaconVersionId ] - Version of this particular beacon
      * @param {String} [ options.appVersionId ] - Concatenated app bundle Id and version Id.
      * @param {String} [ options.beaconInstanceId ] - Normally a UDID for the device/VM.
      */
     constructor(options) {
-        this.beaconPostUrl = options && options.useLocalServer ? LOCAL_HARBOR_SERVICES_URL : CLOUD_HARBOR_SERVICES_PRODUCTION_URL;
-        this.isUsingLocal = !!(options && options.useLocalServer);
-        this.apiKey = (options && options.apiKey) || MAGIC_API_KEY;
+
+        // This had destructuring but I was getting weird errors with null fields even using default params.
+        const server = options && options.server || 'production';
+        this.beaconPostUrl = SERVERS[server];
+        this.apiKey = options && options.apiKey || MAGIC_API_KEY;
         this.beaconVersionId = options && options.beaconVersionId;
         this.appVersionId = options && options.appVersionId;
         this.beaconInstanceId = options && options.beaconInstanceId;
+
     }
 
     /**
@@ -66,15 +73,15 @@ module.exports = class BeaconTX {
      * @returns {string}
      */
     static get localHarborServicesUrl() {
-        return LOCAL_HARBOR_SERVICES_URL;
+        return SERVERS.local;
     }
 
     /**
      *
      * @returns {string}
      */
-    static get cloudHarborServicesUrl() {
-        return CLOUD_HARBOR_SERVICES_URL;
+    static get cloudHarborServicesProductionUrl() {
+        return SERVERS.production;
     }
 
 

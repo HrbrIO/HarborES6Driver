@@ -18,6 +18,7 @@ const Buffer = require('../buffer/buffer');
 const Formatter = require('../formatter/formatter');
 const Tx = require('../transmitter/transmitter');
 const assignIn = require('lodash').assignIn;
+const util = require('util');
 
 let buffer;
 let formatter;
@@ -25,13 +26,11 @@ let tx;
 let txLoopRunning = false;
 let isBeaconInitialized = false;
 let interMessageDelayMs;
-let maxRetries = 3;
-let currentRetryCount;
-let isRetry = false;
-let verbose = true;
+let verbose; // set thru config
 let txOn = true; // disables transmit, used mostly for testing
 let drainedCallback;
-let allowNullMessageType = false;
+let backoffMultiplier = 1;
+
 
 function log(msg) {
     if (verbose) console.log(new Date() + ':' + msg);
@@ -43,13 +42,12 @@ function postNextToHarbor() {
 
     const nextUp = buffer.top;
     txLoopRunning = true;
+
     tx.post(nextUp)
         .then(resp => {
             log('Beacon message sent successfully');
+            backoffMultiplier = 1; // we got one through
             buffer.pull();
-            // reset the retries
-            isRetry = false;
-            currentRetryCount = maxRetries;
             if (buffer.entries) {
                 setTimeout(postNextToHarbor, interMessageDelayMs);
             } else {
@@ -58,33 +56,33 @@ function postNextToHarbor() {
             }
         })
         .catch(err => {
-            log('Beacon message failed...Status: ' + err.status);
+            log('Beacon message failed...status: ' + err.status);
 
             if (!err.status && err.code === 'ECONNREFUSED') err.status = 999; // flag for server down
 
             switch (err.status) {
 
-                // TODO: This is gross :D
                 case 401:
                 case 403:
-                    log('Forbidden error, check API Key');
+                    log('Forbidden error, check API Key, beaconVersionId and appVersionId');
                     break;
 
                 case 999: //server down
                     log('Harbor server refused connection, may be down');
+                    break;
+
                 default:
-                    // TODO: retry counting
-                    log('Unhandled error, retyring');
-                    isRetry = true;
-                    if (currentRetryCount--) {
-                        setTimeout(postNextToHarbor, interMessageDelayMs);
-                    } else {
-                        log('Retry limit exceeded, but this is needs work so retry anyway');
-                        setTimeout(postNextToHarbor, interMessageDelayMs);
-                    }
+                    log(`Unhandled error.`);
+
             }
 
-        });
+            backoffMultiplier *= 2;
+            if (backoffMultiplier>64) backoffMultiplier=64; // saturate
+
+            log(`Retrying failed transmission. Backoff multiplier set to: ${backoffMultiplier}`);
+            setTimeout(postNextToHarbor, interMessageDelayMs*backoffMultiplier);
+
+});
 
 
 }
@@ -138,7 +136,13 @@ const self = module.exports = {
 
         interMessageDelayMs = ( options && options.interMessageDelayMs ) || 5;
         drainedCallback = options.drainedCb;
+        verbose = !!options.verbose;
         isBeaconInitialized = true;
+
+        if (verbose) {
+            console.log('-------  BEACON HEADER SETTINGS -------')
+            console.log(util.inspect(txOptions));
+        }
     },
 
     /**

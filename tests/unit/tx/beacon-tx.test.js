@@ -15,16 +15,14 @@ describe('Beacon-TX Unit Tests', function () {
     describe('Endpoints', function () {
 
         it('should return a local URL string', function (done) {
-            const btx = new BeaconTx({useLocalServer: true});
-            expect(btx.beaconPostUrl).to.equal('http://localhost:2010/v2/beacon');
-            expect(btx.isUsingLocal).to.equal(true);
+            const btx = new BeaconTx({server: 'local'});
+            expect(btx.beaconPostUrl).to.equal('http://localhost:2020/beacon');
             done();
         });
 
         it('should return a cloud URL string', function (done) {
             const btx = new BeaconTx();
-            expect(btx.beaconPostUrl).to.equal('http://cloud.hrbr.io/v2/beacon');
-            expect(btx.isUsingLocal).to.equal(false);
+            expect(btx.beaconPostUrl).to.equal('https://harbor-stream.herokuapp.com/beacon');
             done();
         });
 
@@ -67,7 +65,7 @@ describe('Beacon-TX Unit Tests', function () {
         it('should return a 200 if the local server is running', function (done) {
 
             let opt = _.cloneDeep(options);
-            opt.useLocalServer = true;
+            opt.server = 'local';
 
             const btx = new BeaconTx(opt);
             btx.post({cpuUtil: 0.98})
@@ -85,8 +83,8 @@ describe('Beacon-TX Unit Tests', function () {
     describe('Static debug methods/getters/etc.', function () {
 
         it('should return the local Harbor services URL', function (done) {
-            expect(BeaconTx.localHarborServicesUrl).to.equal('http://localhost:2010/v2/beacon');
-            expect(BeaconTx.cloudHarborServicesUrl).to.equal('http://cloud.hrbr.io/v2/beacon');
+            expect(BeaconTx.localHarborServicesUrl).to.equal('http://localhost:2020/beacon');
+            expect(BeaconTx.cloudHarborServicesProductionUrl).to.equal('https://harbor-stream.herokuapp.com/beacon');
             done();
         });
 
