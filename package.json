@@ -1,6 +1,6 @@
 {
   "name": "beacon-es6-driver",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Hrbr.io ES6 Beacon Driver",
   "main": "index.js",
   "homepage": "https://www.hrbr.io",

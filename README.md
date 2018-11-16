@@ -52,12 +52,13 @@ The `Beacon.initialize` method is passed all options as an object. The fields ar
 
 | Field    |      Description      |  Default Value | Required? |
 |:----------|:---------------------|:--------------:|:----------:|
-| apiKey   |  Your Harbor API Key  | n/a            |  X |
-| appVersionId | The name and version of the app using this driver. Typically something like `io.myco.myapp:2.1.3` |||
-| beaconVersionId | The name and version of the beacon driver. This driver can populate this automatically, or you can override it. | [latest version] ||
+| **apiKey**   |  Your Harbor API Key  | n/a            |  X |
+| **appVersionId** | The name and version of the app using this driver. Typically something like `io.myco.myapp:2.1.3` | n/a | X |
+| **beaconVersionId** | The name and version of the beacon driver. This driver can populate this automatically, or you can override it. | n/a | X |
 | beaconInstanceId | An identifier for the host of this beacon. Typically this is a unique identifier for the individual device or system.|||
 | interMessageDelayMs | Time between message transmission attempts in milliseconds. | 5 ||
 | drainedCb | Callback when the buffer has been drained. Signature: `()=>{}` |||
+| verbose | Turn on/off logging messages. | false ||
 | bufferOptions | An object describing advanced buffering options.|||
 | bufferOptions.lengthLimit | Maximum number of messages buffered before dropping | 100 ||
 | bufferOptions.memoryLimit | *Approximate* limit for buffer size in KB. | 0 = off ||
@@ -69,6 +70,7 @@ The `Beacon.initialize` method is passed all options as an object. The fields ar
 | formatterOptions.commonFields | Fields you want added to every `data` object transmitted. For example, if you want to add the fields `{ color: 'red', day: 'Sunday'}` to every single message transmitted, pass that object here. |||
 | formatterOptions.disableBestPractices | The driver will automatically attach fields that Harbor considers "best practices". (As of this version, there are no such fields.). | false ||
 
+_Failure to provide the required `apiKey`, `appVersionId`, or `beaconVersionId` parameters to the `Beacon.initialize` method will result in a strongly worded `Error` and absolutely no soup for you._ 
 
 ## Installation to Create Your Own Variant
 

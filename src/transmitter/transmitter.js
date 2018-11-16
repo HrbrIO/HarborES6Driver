@@ -16,7 +16,7 @@ module.exports = class BeaconTX {
      * @param {Object} options - Options for the transmitter
      * @param [{String}] options.server - [ production, staging, local ]
      * @param {String} options.apiKey - API key for this client. If not specified, the test API key is used
-     * @param {String} [ options.beaconVersionId ] - Version of this particular beacon
+     * @param {String} options.beaconVersionId - Version of this particular beacon
      * @param {String} [ options.appVersionId ] - Concatenated app bundle Id and version Id.
      * @param {String} [ options.beaconInstanceId ] - Normally a UDID for the device/VM.
      */

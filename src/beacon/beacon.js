@@ -117,10 +117,16 @@ const self = module.exports = {
      *
      */
     initialize: function (options) {
-        // TODO: add in authentication?
 
         // Error out if no API Key
         if (!options.apiKey) throw new Error("Missing apiKey");
+
+        // Error out if no appVersionId
+        if (!options.appVersionId) throw new Error("Missing appVersionId");
+
+        // Error out if no beaconVersionId
+        if (!options.beaconVersionId) throw new Error("Missing beaconVersionId");
+
 
         buffer = new Buffer(options && options.bufferOptions);
         formatter = new Formatter(options && options.formatterOptions);
