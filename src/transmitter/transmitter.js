@@ -2,8 +2,8 @@ const request = require('superagent');
 const BEACON_ENDPOINT = '/beacon';
 
 const SERVERS = {
-    production: 'https://harbor-stream.herokuapp.com/beacon',
-    staging: 'https://harbor-stream-staging.herokuapp.com/beacon',
+    production: 'https://harbor-stream.hrbr.io/beacon',
+    staging: 'https://harbor-stream-staging.hrbr.io/beacon',
     local: 'http://localhost:2020' + BEACON_ENDPOINT
 };
 
