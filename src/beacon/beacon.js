@@ -155,6 +155,7 @@ const self = module.exports = {
      * @param {Object} [beaconObject=null] Beacon object
      * @param {String} [beaconObject.beaconMessageType=null]  beacon message type
      * @param { Object } [beaconObject.data = null ]  beacon data
+     * @param { Number } [beaconObject.dataTimestamp = null ]  dataTimestamp, leaving null will get stamped with current time.
      */
     transmit: function (beaconObject) {
 
@@ -162,10 +163,7 @@ const self = module.exports = {
             throw new Error('Cannot transmit on uninitialized beacon.');
         }
 
-        const msgType = beaconObject && beaconObject.beaconMessageType;
-        const data = beaconObject && beaconObject.data;
-
-        let formattedBeaconObject = formatter.format(msgType, data);
+        let formattedBeaconObject = formatter.format(beaconObject);
         buffer.push(formattedBeaconObject);
         // if nothing is being transmitted, kick tx off
         if (!txLoopRunning) postNextToHarbor();

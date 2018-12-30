@@ -22,7 +22,7 @@ describe('Beacon-TX Unit Tests', function () {
 
         it('should return a cloud URL string', function (done) {
             const btx = new BeaconTx();
-            expect(btx.beaconPostUrl).to.equal('https://harbor-stream.herokuapp.com/beacon');
+            expect(btx.beaconPostUrl).to.equal('https://harbor-stream.hrbr.io/beacon');
             done();
         });
 
@@ -84,7 +84,7 @@ describe('Beacon-TX Unit Tests', function () {
 
         it('should return the local Harbor services URL', function (done) {
             expect(BeaconTx.localHarborServicesUrl).to.equal('http://localhost:2020/beacon');
-            expect(BeaconTx.cloudHarborServicesProductionUrl).to.equal('https://harbor-stream.herokuapp.com/beacon');
+            expect(BeaconTx.cloudHarborServicesProductionUrl).to.equal('https://harbor-stream.hrbr.io/beacon');
             done();
         });
 

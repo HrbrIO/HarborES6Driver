@@ -40,14 +40,13 @@ module.exports = class Formatter {
     }
 
     /**
-     * @param {String} [beaconMessageType=null] beacon message type
-     * @param { Object } [data=null]  beacon message payload
+     * @param { Object } [beaconObject=null]
      * @returns { Object }
      */
-    format(beaconMessageType, data) {
+    format({data = null, beaconMessageType, dataTimestamp = null}) {
 
         let formattedObject = {};
-        formattedObject.dataTimestamp = new Date().getTime();
+        formattedObject.dataTimestamp = dataTimestamp || new Date().getTime();
 
         formattedObject.beaconMessageType = beaconMessageType;
         formattedObject.data = data;

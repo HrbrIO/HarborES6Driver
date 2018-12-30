@@ -44,7 +44,10 @@ Once the beacon driver is initialized, you can send a beacon with:
 `Beacon.transmit({ beaconMessageType: 'TEST_MSG', data: {...});`
 
 `beaconMessageType` is application dependent, as is the `data` you send. Some foghorn and tug implementations
-may require specific message types and data schema, so check your documentation.
+may require specific message types and data schema, so check your documentation. If you include `dataTimestamp` then this 
+value will be used instead of the current time:
+
+`Beacon.transmit({ beaconMessageType: 'TEST_MSG', dataTimestamp: 12345678. data: {...});`
 
 ## Configuration Options
 

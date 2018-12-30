@@ -32,13 +32,14 @@ describe('Beacon Unit Tests', function () {
         });
 
         it('Init of Beacon should change isInitialized.', function (done) {
-            Beacon.initialize({apiKey: 'ABCD321099', txOptions: {useLocalServer: true}});
+            Beacon.initialize({apiKey: 'ABCD321099', appVersionId: 'io.hrbr.test:1.0.0',
+                beaconVersionId: 'io.hrbr.test:1.0.0', txOptions: {useLocalServer: true}});
             expect(Beacon.isInitialized).to.equal(true);
             done();
         });
 
         it('Initted Beacon should NOT throw Error on transmit.', function (done) {
-            expect(Beacon.transmit).to.not.throw();
+            expect(() => Beacon.transmit({ beaconMessageType: 'TEST', data: {}})).to.not.throw();
             // TODO: this should be in its own test, but there were sequencing issues...
             Beacon.beaconPostUrl = 'beer';
             expect(Beacon.beaconPostUrl).to.equal('beer');

@@ -55,7 +55,7 @@ describe('Formatter Unit Tests', function () {
         it('formatter should return object with BP fields attached, no beaconMessageType', function (done) {
             const fmtr = new Formatter();
             const beaconMsg = {cpu: 0.98, weather: 'stormy'};
-            const formatted = fmtr.format(null, beaconMsg);
+            const formatted = fmtr.format({ beaconMessageType: null, data: beaconMsg });
             expect(formatted).to.be.an('object');
             expect(formatted.data).to.be.an('object');
             expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
@@ -69,7 +69,7 @@ describe('Formatter Unit Tests', function () {
             const bmt = "CPU_AND_WEATHER";
             const fmtr = new Formatter();
             const beaconMsg = {cpu: 0.98, weather: 'stormy'};
-            const formatted = fmtr.format(bmt, beaconMsg);
+            const formatted = fmtr.format({ beaconMessageType: bmt, data: beaconMsg});
             expect(formatted).to.be.an('object');
             expect(formatted.data).to.be.an('object');
             expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
@@ -119,7 +119,7 @@ describe('Formatter Unit Tests', function () {
         it('formatter should return object with BP & CF  attached', function (done) {
             const fmtr = new Formatter({commonFields: COMMON_FIELDS});
             const beaconMsg = {cpu: 0.98, weather: 'stormy'};
-            const formatted = fmtr.format(null, beaconMsg);
+            const formatted = fmtr.format({ beaconMessageType: null, data: beaconMsg});
             expect(formatted).to.be.an('object');
             expect(formatted.data.cpu).to.equal(beaconMsg.cpu);
             expect(formatted.data.weather).to.equal(beaconMsg.weather);
